@@ -43,4 +43,3 @@ SELECT * FROM CA;
   2021 | 54833.6
 (22 lignes)
 */
-

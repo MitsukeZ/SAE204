@@ -15,4 +15,3 @@ HAVING   EXTRACT(YEAR FROM v.dteVente) = 2021;
          54833.6
 (1 ligne)
 */
-
