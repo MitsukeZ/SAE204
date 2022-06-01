@@ -5,7 +5,7 @@ triés par ordre décroissant de leur nombre d’achats (sans prendre en compte 
 
 SELECT c.numClient, c.nomClient, SUM(co.quantite) AS nbA
 FROM   Client c JOIN Vente v      ON c.numClient = v.numClient
-                JOIN Concerner co ON v.numVente = co.numVente
+                JOIN Concerner co ON v.numVente  = co.numVente
 GROUP BY c.numClient
 ORDER BY nbA DESC;
 
