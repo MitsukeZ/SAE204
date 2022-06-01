@@ -8,7 +8,7 @@ Drop table IF EXISTS Client;
 
 Create table Client (
 	numClient    serial primary key,
-	nomClient    varchar(11) ,
+	nomClient    varchar(11),
 	numTelClient text,
 	mailClient   text
 );
