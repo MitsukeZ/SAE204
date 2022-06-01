@@ -3,25 +3,25 @@ b) Lister les clients (numéro, nom) et leur nombre d’achats (que l’on nomme
 triés par ordre décroissant de leur nombre d’achats (sans prendre en compte la quantité achetée)
 */
 
-SELECT c.numClient, c.nomClient, SUM(co.quantite) AS nbA
+SELECT c.numClient, c.nomClient, COUNT(v.numClient) AS nbA
 FROM   Client c JOIN Vente v      ON c.numClient = v.numClient
                 JOIN Concerner co ON v.numVente  = co.numVente
 GROUP BY c.numClient
 ORDER BY nbA DESC;
 
 /*
- numclient |  nomclient  | nba  
------------+-------------+------
-         4 | Poret       | 8816
-         6 | Timable     | 6639
-         8 | Ohm         | 6159
-         7 | Don Devello | 5664
-         9 | Ginal       | 4564
-         3 | Hauraque    | 4307
-         5 | Menvussa    | 4093
-        10 | Hautine     | 3865
-         2 | Fissile     | 3651
-         1 | Torguesse   | 2645
-        11 | Kament      | 1691
-(11 rows)
+ numclient |  nomclient  | nba
+-----------+-------------+-----
+         4 | Poret       |  19
+         7 | Don Devello |  12
+         6 | Timable     |  12
+         8 | Ohm         |  11
+         3 | Hauraque    |  11
+        10 | Hautine     |   9
+         5 | Menvussa    |   9
+         9 | Ginal       |   8
+         2 | Fissile     |   8
+         1 | Torguesse   |   6
+        11 | Kament      |   4
+(11 lignes)
 */
