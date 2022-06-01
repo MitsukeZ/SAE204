@@ -24,5 +24,5 @@ WHERE s.nomSerie = 'Asterix le gaulois';
          9 | Ginal
         10 | Hautine
         11 | Kament
-(11 rows)
+(11 lignes)
 */

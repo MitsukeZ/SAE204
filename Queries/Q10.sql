@@ -20,5 +20,5 @@ SELECT * FROM bdEd10;
 ------------+--------------------+------
  Lombard    | info@Lombard.be    |   27
  Dargaud    | contact@dargaud.fr |   49
-(2 rows)
+(2 lignes)
 */
