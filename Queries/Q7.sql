@@ -14,11 +14,11 @@ FROM            Client c JOIN Vente v      ON c.numClient = v.numClient
                          JOIN Concerner co ON v.numVente  = co.numVente
                          JOIN BD           ON co.isbn     = BD.isbn
                          JOIN Serie s      ON BD.numSerie = s.numSerie
-WHERE s.nomSerie != 'Asterix le gaulois'
+WHERE s.nomSerie != 'Asterix le gaulois';
 
 /*
  numclient | nomclient 
 -----------+-----------
          3 | Hauraque
-(1 row)
+(1 ligne)
 */

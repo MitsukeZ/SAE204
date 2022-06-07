@@ -19,7 +19,7 @@ ORDER BY annee, e.nomEditeur;
 SELECT * FROM bdEditeur;
 
 /*
-annee | sum  |       nomediteur       
+ annee | sum  |       nomediteur
 -------+------+------------------------
   2000 | 1362 | Dargaud
   2000 | 1025 | Lombard
@@ -75,5 +75,5 @@ annee | sum  |       nomediteur
   2021 |  456 | Delcourt
   2021 | 2324 | Lombard
   2021 |  406 | Vents d Ouest
-(54 rows)
+(54 lignes)
 */
