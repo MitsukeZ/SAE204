@@ -1,11 +1,10 @@
-COPY 9
-editeur
-52094;Vents d Ouest
-52094;Lombard
-52094;Helium
-52094;Delcourt
-52094;Les humanoides associe
-52094;Bamboo Edition
-52094;Tonkan
-52094;Dargaud
-52094;Pika Edition
+;
+nomediteur;nbbdvendu
+Delcourt;4572
+Les humanoides associe;1367
+Vents d Ouest;3977
+Bamboo Edition;1489
+Tonkan;2035
+Lombard;13712
+Dargaud;22151
+Pika Edition;608
