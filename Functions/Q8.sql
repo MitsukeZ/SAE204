@@ -37,5 +37,3 @@ AS $$
         END LOOP;
     END
 $$ LANGUAGE PLPGSQL;
-
-SELECT * FROM getQteMinMaxClients();

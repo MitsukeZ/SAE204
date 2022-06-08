@@ -46,5 +46,3 @@ AS $$
     END
 $$ LANGUAGE PLPGSQL;
 
-SELECT * FROM getClientSerieComplete('Asterix le gaulois');
-

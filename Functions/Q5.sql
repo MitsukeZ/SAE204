@@ -34,4 +34,3 @@ AS $$
     END
 $$ LANGUAGE PLPGSQL;
 
-SELECT * FROM getInfoNbBdAnnee(500, 2020);
