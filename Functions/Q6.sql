@@ -61,15 +61,16 @@ AS $$
                            GROUP BY EXTRACT(YEAR FROM v.dteVente), e.nomEditeur, c.nomClient, c.mailClient
                            HAVING   e.nomEditeur = paramEditeur AND
                                     EXTRACT(YEAR FROM v.dteVente) = paramAnnee) AS query
-                     WHERE qte = (SELECT MAX(qte) FROM (SELECT EXTRACT(YEAR FROM v.dteVente)::INT as annee, e.nomEditeur, c.nomClient, c.mailClient, SUM(co.quantite) as qte
-                                  FROM   Client c JOIN Vente v      ON c.numClient  = v.numClient
-                                                  JOIN Concerner co ON v.numVente   = co.numVente
-                                                  JOIN BD           ON co.isbn      = BD.isbn
-                                                  JOIN Serie s      ON BD.numSerie  = s.numSerie
-                                                  JOIN Editeur e    ON s.numEditeur = e.numEditeur
-                                  GROUP BY EXTRACT(YEAR FROM v.dteVente), e.nomEditeur, c.nomClient, c.mailClient
-                                  HAVING   e.nomEditeur = paramEditeur AND
-                                           EXTRACT(YEAR FROM v.dteVente) = paramAnnee) AS query);
+                     WHERE qte = (SELECT MAX(qte) 
+                                  FROM (SELECT EXTRACT(YEAR FROM v.dteVente)::INT as annee, e.nomEditeur, c.nomClient, c.mailClient, SUM(co.quantite) as qte
+                                        FROM   Client c JOIN Vente v      ON c.numClient  = v.numClient
+                                                        JOIN Concerner co ON v.numVente   = co.numVente
+                                                        JOIN BD           ON co.isbn      = BD.isbn
+                                                        JOIN Serie s      ON BD.numSerie  = s.numSerie
+                                                        JOIN Editeur e    ON s.numEditeur = e.numEditeur
+                                        GROUP BY EXTRACT(YEAR FROM v.dteVente), e.nomEditeur, c.nomClient, c.mailClient
+                                        HAVING   e.nomEditeur = paramEditeur AND
+                                                 EXTRACT(YEAR FROM v.dteVente) = paramAnnee) AS query);
     END
 $$ LANGUAGE PLPGSQL;
 
