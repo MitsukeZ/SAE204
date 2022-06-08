@@ -5,43 +5,33 @@ BD dans l’année en question. Si aucun éditeur ne répond à la requête, le 
 par un message approprié.
 */
 
-create or replace function getInfonbBdAnnee(nbBd int,dateBD int)
-returns SETOF Editeur
-as $$
+DROP FUNCTION IF EXISTS getInfoNbBdAnnee(nbBD INT, anneeBD INT);
 
-DECLARE
-    resultat Editeur;
-    sommeQteAcheter Concerner.quantite%TYPE;
+CREATE OR REPLACE FUNCTION getInfoNbBdAnnee(nbBD INT, anneeBD INT) RETURNS SETOF Editeur
+AS $$
+    BEGIN
+        PERFORM e.*
+                     FROM   Editeur e JOIN Serie s      ON e.numEditeur = s.numEditeur
+                                      JOIN BD           ON s.numSerie   = BD.numSerie
+                                      JOIN Concerner co ON BD.isbn      = co.isbn
+                                      JOIN Vente v      ON co.numVente  = v.numVente
+                     WHERE EXTRACT(YEAR FROM v.dteVente) = anneeBD
+                     GROUP BY e.numEditeur
+                     HAVING SUM(co.quantite) >= nbBD;
 
-BEGIN
-    FOR sommeQteAcheter IN SELECT sum(c.quantite) FROM Concerner c NATURAL JOIN Editeur e GROUP BY e.numEditeur
+        IF (NOT FOUND) THEN
+            RAISE EXCEPTION 'Aucun éditeur n''a vendu autant/plus de BD que le nombre en paramètre';
+        END IF;
+        
+        RETURN QUERY SELECT e.*
+                     FROM   Editeur e JOIN Serie s      ON e.numEditeur = s.numEditeur
+                                      JOIN BD           ON s.numSerie   = BD.numSerie
+                                      JOIN Concerner co ON BD.isbn      = co.isbn
+                                      JOIN Vente v      ON co.numVente  = v.numVente
+                     WHERE EXTRACT(YEAR FROM v.dteVente) = anneeBD
+                     GROUP BY e.numEditeur
+                     HAVING SUM(co.quantite) >= nbBD;
+    END
+$$ LANGUAGE PLPGSQL;
 
-    LOOP
-        SELECT DISTINCT (ed.*) INTO resultat
-        FROM BD bd join Concerner co on co.isbn       = bd.isbn
-                   join Vente ve     on co.numVente   = ve.numVente
-                   join Serie se     on se.numSerie   = bd.numSerie
-                   join Editeur ed   on ed.numEditeur = se.numEditeur
-
-        WHERE ed.numEditeur in (Select numEditeur
-                                From   Serie
-                                Where  numSerie in (Select  numserie
-                                                    From    BD
-                                                    Where   isbn in (Select isbn
-                                                                    From   Concerner
-                                                                    Where  sommeQteAcheter >= nbBd and
-                                                                            numVente in (select numVente
-                                                                                        from   Vente
-                                                                                        where  EXTRACT(YEAR FROM dteVente) = dateBD))));
-    END LOOP;
-
-    LOOP
-        RETURN NEXT resultat;
-    END LOOP;
-
-    IF (NOT FOUND) THEN
-    RAISE EXCEPTION USING MESSAGE = 'Aucun éditeur n’a pas édité autant de BD a cette date ';
-    END IF;
-
-END
-$$ language plpgsql;
+SELECT * FROM getInfoNbBdAnnee(500, 2020);
