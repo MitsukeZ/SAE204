@@ -1,10 +1,10 @@
-a) Lister les clients (numéro et nom) triés par ordre alphabétique du nom
+--a) Lister les clients (numéro et nom) triés par ordre alphabétique du nom
 
 SELECT   numClient, nomClient
 FROM     Client
 ORDER BY nomClient;
 
-
+/*
  numclient |  nomclient  
 -----------+-------------
          7 | Don Devello
@@ -19,10 +19,10 @@ ORDER BY nomClient;
          6 | Timable
          1 | Torguesse
 (11 rows)
+*/
 
 
-
-b) Lister les clients (numéro, nom) et leur nombre d’achats (que l’on nommera nbA) triés par ordre décroissant de leur nombre d’achats (sans prendre en compte la quantité achetée)
+--b) Lister les clients (numéro, nom) et leur nombre d’achats (que l’on nommera nbA) triés par ordre décroissant de leur nombre d’achats (sans prendre en compte la quantité achetée)
 
 SELECT c.numClient, c.nomClient, COUNT(v.numClient) AS nbA
 FROM   Client c JOIN Vente v      ON c.numClient = v.numClient
@@ -30,7 +30,7 @@ FROM   Client c JOIN Vente v      ON c.numClient = v.numClient
 GROUP BY c.numClient
 ORDER BY nbA DESC;
 
-
+/*
  numclient |  nomclient  | nba
 -----------+-------------+-----
          4 | Poret       |  19
@@ -45,10 +45,10 @@ ORDER BY nbA DESC;
          1 | Torguesse   |   6
         11 | Kament      |   4
 (11 lignes)
+*/
 
 
-
-c) Lister les clients (numéro, nom) avec leur coût total d’achats (que l’on nommera coutA) triés par leur coût décroissant, qui ont totalisé au moins 50000€ d’achats..
+--c) Lister les clients (numéro, nom) avec leur coût total d’achats (que l’on nommera coutA) triés par leur coût décroissant, qui ont totalisé au moins 50000€ d’achats..
 
 SELECT c.numClient, c.nomClient, SUM(co.prixVente*co.quantite) AS coutA
 FROM   Client c JOIN Vente v      ON c.numClient = v.numClient
@@ -57,7 +57,7 @@ GROUP BY c.numClient
 HAVING   SUM(co.prixVente*co.quantite) >= 50000
 ORDER BY coutA DESC;
 
-
+/*
  numclient |  nomclient  |  couta
 -----------+-------------+----------
          4 | Poret       | 129141.2
@@ -69,25 +69,25 @@ ORDER BY coutA DESC;
          5 | Menvussa    |  56772.3
          3 | Hauraque    |    51684
 (8 lignes)
+*/
 
 
-
-d) Afficher le chiffre d’affaire des ventes effectuées en 2021 (on pourra utiliser la fonction extract pour récupérer l’année seule d’une date)
+--d) Afficher le chiffre d’affaire des ventes effectuées en 2021 (on pourra utiliser la fonction extract pour récupérer l’année seule d’une date)
 
 SELECT   SUM(co.prixVente * co.quantite) as chiffreAffaires
 FROM     Vente v JOIN Concerner co ON v.numVente = co.numVente
 GROUP BY EXTRACT(YEAR FROM v.dteVente)
 HAVING   EXTRACT(YEAR FROM v.dteVente) = 2021;
 
-
+/*
  chiffreaffaires
 -----------------
          54833.6
 (1 ligne)
+*/
 
 
-
-e) Créer une vue appelée CA qui affiche le chiffre d’affaire réalisé par année en listant dans l’ordre croissant des années (champ appelé annee) et en face le chiffre réalisé (appelé chA).
+--e) Créer une vue appelée CA qui affiche le chiffre d’affaire réalisé par année en listant dans l’ordre croissant des années (champ appelé annee) et en face le chiffre réalisé (appelé chA).
 
 DROP VIEW IF EXISTS CA;
 
@@ -100,7 +100,7 @@ ORDER BY annee;
 --Requete pour voir le contenu de la vue
 SELECT * FROM CA;
 
-
+/*
  annee |   cha
 -------+---------
   2000 |   34059
@@ -126,10 +126,10 @@ SELECT * FROM CA;
   2020 |   24000
   2021 | 54833.6
 (22 lignes)
+*/
 
 
-
-f) Lister tous les clients (numéro et nom) ayant acheté des BD de la série ‘Astérix le gaulois’.
+--f) Lister tous les clients (numéro et nom) ayant acheté des BD de la série ‘Astérix le gaulois’.
 
 SELECT DISTINCT c.numClient, c.nomClient
 FROM            Client c JOIN Vente v      ON c.numClient = v.numClient
@@ -138,7 +138,7 @@ FROM            Client c JOIN Vente v      ON c.numClient = v.numClient
                          JOIN Serie s      ON BD.numSerie = s.numSerie
 WHERE s.nomSerie = 'Asterix le gaulois';
 
-
+/*
  numclient |  nomclient  
 -----------+-------------
          1 | Torguesse
@@ -153,10 +153,10 @@ WHERE s.nomSerie = 'Asterix le gaulois';
         10 | Hautine
         11 | Kament
 (11 lignes)
+*/
 
 
-
-g) Lister les clients (numéro et nom) qui n’ont acheté que les BD de la série ‘Asterix le gaulois’ (en utilisant la clause EXCEPT)
+--g) Lister les clients (numéro et nom) qui n’ont acheté que les BD de la série ‘Asterix le gaulois’ (en utilisant la clause EXCEPT)
 
 SELECT DISTINCT c.numClient, c.nomClient
 FROM            Client c JOIN Vente v      ON c.numClient = v.numClient
@@ -171,16 +171,17 @@ FROM            Client c JOIN Vente v      ON c.numClient = v.numClient
                          JOIN Serie s      ON BD.numSerie = s.numSerie
 WHERE s.nomSerie != 'Asterix le gaulois';
 
-
+/*
  numclient | nomclient 
 -----------+-----------
          3 | Hauraque
 (1 ligne)
+*/
 
-
-
+/*
 h) Créer et afficher une vue nommée best5 qui liste les 5 meilleurs clients (ayant donc dépensé le plus d’argent en BD) en affichant leur numéro, nom et adresse 
 mail, ainsi que le nombre total de BD qu’ils ont acheté (champ nbBD en tenant compte des quantités achetées), ainsi que le total de leurs achats (champ coutA).
+*/
 
 DROP VIEW IF EXISTS best5;
 
@@ -198,7 +199,7 @@ LIMIT 5;
 --Requete pour voir le contenu de la vue
 select * from best5;
 
-
+/*
  numclient |  nomclient  |   mailclient    | nbbd | totalachat
 -----------+-------------+-----------------+------+------------
          4 | Poret       | mail@he.fr      | 8816 |   129141.2
@@ -207,11 +208,12 @@ select * from best5;
          7 | Don Devello | mail@he.fr      | 5664 |    82909.4
          9 | Ginal       | mail@ange.fr    | 4564 |    66003.9
 (5 lignes)
+*/
 
-
-
+/*
 i) Construire et afficher une vue bdEditeur qui affiche le nombre de BD vendues par an et par éditeur, par ordre croissant des années 
 et des noms d’éditeurs.  On y affichera le nom de l’éditeur, l’année considérée et le nombre de BD publiées.
+*/
 
 DROP VIEW IF EXISTS bdEditeur;
 
@@ -227,7 +229,7 @@ ORDER BY annee, e.nomEditeur;
 --Requete pour voir le contenu de la vue
 SELECT * FROM bdEditeur;
 
-
+/*
  annee | sum  |       nomediteur
 -------+------+------------------------
   2000 | 1362 | Dargaud
@@ -285,12 +287,13 @@ SELECT * FROM bdEditeur;
   2021 | 2324 | Lombard
   2021 |  406 | Vents d Ouest
 (54 lignes)
+*/
 
-
-
+/*
 j) Construire et afficher une vue bdEd10 qui affiche les éditeurs qui 
 ont publié plus de 10 BD, en donnant leur nom et email, ainsi que 
 le nombre de BD différentes qu’ils ont publiées.
+*/
 
 DROP VIEW IF EXISTS bdEd10;
 
@@ -304,9 +307,10 @@ HAVING   COUNT(BD.isbn) > 10;
 --Requete pour voir le contenu de la vue
 SELECT * FROM bdEd10;
 
-
+/*
  nomediteur |    mailediteur     | nbbd 
 ------------+--------------------+------
  Lombard    | info@Lombard.be    |   27
  Dargaud    | contact@dargaud.fr |   49
 (2 lignes)
+*/
