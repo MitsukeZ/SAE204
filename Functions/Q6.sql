@@ -46,7 +46,7 @@ CREATE TYPE ClientMaxi AS (
     mailClient TEXT
 );
 
-DROP FUNCTION IF EXISTS getClientsDeAnnee(paramAnnee INT, paramEditeur Editeur.nomEditeur%TYPE);
+DROP FUNCTION IF EXISTS getClientsDeLannee(paramAnnee INT, paramEditeur Editeur.nomEditeur%TYPE);
 
 CREATE OR REPLACE FUNCTION getClientsDeLannee(paramAnnee INT, paramEditeur Editeur.nomEditeur%TYPE) RETURNS SETOF ClientMaxi
 AS $$
@@ -73,5 +73,3 @@ AS $$
                                                  EXTRACT(YEAR FROM v.dteVente) = paramAnnee) AS query);
     END
 $$ LANGUAGE PLPGSQL;
-
-SELECT * FROM getClientsDeLannee(2000, 'Dargaud');

@@ -67,5 +67,3 @@ AS $$
     END
 $$ LANGUAGE PLPGSQL;
 
-SELECT * FROM classerClients('Dargaud');
-
