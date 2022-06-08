@@ -22,10 +22,10 @@ CREATE OR REPLACE FUNCTION classerClients(paramEditeur Editeur.nomEditeur%TYPE) 
 AS $$
     DECLARE
         curs CURSOR FOR SELECT c.*
-                        FROM   Client c JOIN Vente v      ON c.numClient = v.numClient
-                                        JOIN Concerner co ON v.numVente  = co.numVente
-                                        JOIN BD           ON co.isbn     = BD.isbn
-                                        JOIN Serie s      ON BD.numSerie = s.numSerie
+                        FROM   Client c JOIN Vente v      ON c.numClient  = v.numClient
+                                        JOIN Concerner co ON v.numVente   = co.numVente
+                                        JOIN BD           ON co.isbn      = BD.isbn
+                                        JOIN Serie s      ON BD.numSerie  = s.numSerie
                                         JOIN Editeur e    ON s.numEditeur = e.numEditeur 
                         GROUP BY c.numClient, e.nomEditeur
                         HAVING e.nomEditeur = paramEditeur; 

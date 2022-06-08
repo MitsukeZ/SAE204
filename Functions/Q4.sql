@@ -7,19 +7,44 @@ d’avertissement ‘Aucun client n’a acheté tous les exemplaires de la séri
 complétant le ‘ %’ par le nom de la série.
 */
 
-CREATE OR REPLACE FUNCTION proc_d(nomDeSerie Serie.nomSerie%TYPE)
-RETURNS SETOF Client AS
+DROP FUNCTION IF EXISTS getClientSerieComplete(paramSerie Serie.nomSerie%TYPE);
 
-DECLARE
-    client Client;
+CREATE OR REPLACE FUNCTION getClientSerieComplete(paramSerie Serie.nomSerie%TYPE) RETURNS SETOF Client
+AS $$
+    DECLARE
+        nbVolumes INT;
+    BEGIN
+        --Récupération du nombre de volumes de la série
+        SELECT count(*) INTO nbVolumes
+        FROM   BD JOIN Serie s ON BD.numSerie = s.numSerie
+        WHERE  s.nomSerie = paramSerie;
+
+        IF (NOT FOUND) THEN
+            RAISE EXCEPTION 'Série Inexistante';
+        END IF;
+
+        PERFORM DISTINCT c.* FROM Client c JOIN Vente v      ON c.numClient  = v.numClient
+                            JOIN Concerner co ON v.numVente   = co.numVente
+                            JOIN BD           ON co.isbn      = BD.isbn
+                            JOIN Serie s      ON BD.numSerie  = s.numSerie
+        GROUP BY c.numClient
+        HAVING   COUNT(BD.isbn) = nbVolumes;
+
+        IF (NOT FOUND) THEN
+            RAISE EXCEPTION USING MESSAGE = 'Aucun client n’a acheté tous les exemplaires de la série ' || paramSerie;
+        END IF;
+
+        RETURN QUERY SELECT DISTINCT c.* 
+                     FROM   Client c JOIN Vente v      ON c.numClient  = v.numClient
+                                     JOIN Concerner co ON v.numVente   = co.numVente
+                                     JOIN BD           ON co.isbn      = BD.isbn
+                                     JOIN Serie s      ON BD.numSerie  = s.numSerie
+                     GROUP BY c.numClient
+                     HAVING   COUNT(BD.isbn) = nbVolumes;
 
 
-BEGIN
-    FOR client IN SELECT c.* FROM Client c WHERE 
+    END
+$$ LANGUAGE PLPGSQL;
 
+SELECT * FROM getClientSerieComplete('Asterix le gaulois');
 
-    IF (NOT FOUND) THEN
-        RAISE EXCEPTION USING MESSAGE = 'Aucun client n''a acheté tous les exemplaires de la série' || nomDeSerie;
-
-END
-$$ LANGUAGE plpgsql
