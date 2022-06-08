@@ -5,8 +5,10 @@ croissant des années). Les années sont en abscisse et le chiffre d’affaire e
 ordonnée.
 */
 
-SELECT EXTRACT(YEAR FROM dteVente), sum(quantite*prixVente) AS Chiffre_affaire FROM   Concerner NATURAL JOIN Vente GROUP BY EXTRACT(YEAR FROM dteVente) ORDER BY EXTRACT(YEAR FROM dteVente) ASC;
-
+SELECT   EXTRACT(YEAR FROM dteVente) AS annee, sum(quantite*prixVente) AS Chiffre_affaire
+FROM     Concerner NATURAL JOIN Vente
+GROUP BY EXTRACT(YEAR FROM dteVente)
+ORDER BY EXTRACT(YEAR FROM dteVente) ASC;
 
 
 \copy (SELECT EXTRACT(YEAR FROM dteVente), sum(quantite*prixVente) AS Chiffre_affaire FROM   Concerner NATURAL JOIN Vente GROUP BY EXTRACT(YEAR FROM dteVente) ORDER BY EXTRACT(YEAR FROM dteVente) ASC;) TO './Question_A.csv' DELIMITER ';' QUOTE '"' CSV HEADER
