@@ -16,7 +16,7 @@ DROP TYPE IF EXISTS rangClient CASCADE;
 CREATE TYPE rangClient AS (
     numClient  INT,
     nomClient  VARCHAR(11),
-    classement INT
+    rang       INT
 );
 
 DROP FUNCTION IF EXISTS getClassementClients();
@@ -36,7 +36,7 @@ AS $$
                      ORDER BY SUM(co.quantite) DESC
         LOOP
             
-            tuple.classement := cpt;
+            tuple.rang := cpt;
             cpt := cpt + 1;
             RETURN NEXT tuple;
         END LOOP;
