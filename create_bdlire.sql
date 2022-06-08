@@ -43,7 +43,7 @@ Create Table BD (
 	titre                text,
 	prixActuel           float not null,
 	numTome              int,
-	numSerie             int references Serie(numSerie),
+	numSerie             int references Serie (numSerie ),
 	numAuteurDessinateur int references Auteur(numAuteur),
 	numAuteurScenariste  int references Auteur(numAuteur)
 );
