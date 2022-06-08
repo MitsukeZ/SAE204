@@ -35,8 +35,8 @@ BEGIN
                                                 FROM   Auteur
                                                 WHERE  nomAuteur = nomScenariste);
 
-    EXCEPTION
-        WHEN NO_DATA_FOUND THEN
-            --SELECT CONCAT('l''éditeur ', nomDediteur, ' n''a pas édité de BD des auteurs ', nomDessinateur, ' et ', nomScenariste);
+    IF (NOT FOUND) THEN
+        RAISE EXCEPTION USING MESSAGE = 'l''éditeur ' || nomDediteur || ' n''a pas édité de BD des auteurs ' || nomDessinateur || ' et ' || nomScenariste;
+    END IF;
 END
 $$ LANGUAGE plpgsql;
